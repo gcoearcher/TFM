@@ -1,0 +1,6 @@
+https://www.kaggle.com/datasets/sahideseker/tweet-sentiment-classification-dataset/code
+https://www.kaggle.com/datasets/abdallahwagih/emotion-dataset
+https://www.kaggle.com/datasets/simaanjali/emotion-analysis-based-on-text?resource=download
+https://www.kaggle.com/datasets/durgeshrao9993/twitter-analysis-dataset-2022
+https://www.kaggle.com/datasets/aadyasingh55/twitter-emotion-classification-dataset
+https://www.kaggle.com/datasets/mgmitesh/sentiment-analysis-dataset
