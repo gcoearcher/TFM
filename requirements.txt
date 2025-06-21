@@ -1,0 +1,9 @@
+requests
+boto3
+pandas
+apscheduler
+kaggle
+pyspark==3.5.1
+pyarrow
+fsspec
+s3fs
