@@ -21,3 +21,6 @@ pytho==3.9
 pyspark==3.1.3
 delta-spark==1.0.0
 java==11.0 
+-----------------------------
+Hay limitadores en el codigo por si se quiere accelerar la performance.
+ApiCall Kaggle -> Da error en la primera ejecución (la seguna ya funciona), por un tema de la api.authorization()
