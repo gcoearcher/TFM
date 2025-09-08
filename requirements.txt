@@ -22,3 +22,8 @@ s3fs
 nltk
 delta-spark==1.0.0
 ipykernel
+torch
+transformers
+sklearn
+datasets
+scikit-learn
