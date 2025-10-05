@@ -1,0 +1,8 @@
+{% extends "./layout.html" %}
+
+{% block title %}{{ data.titulo }}{% endblock %}
+
+{% block body %}
+    <h1>¡Hola, {{ data.nombre }}!</h1>
+    <h2>Tienes {{ data.edad }} años.</h2>
+{% endblock %}
