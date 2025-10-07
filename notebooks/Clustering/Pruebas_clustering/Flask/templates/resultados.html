@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Resultados de Clustering Emocional</title>
+</head>
+<body>
+  <h1>🎯 {{ n_clusters }} clusters encontrados</h1>
+
+  {% for cluster in resumen_clusters %}
+    <div>
+      <h2>📊 Cluster {{ cluster.id }} ({{ cluster.size }} textos)</h2>
+      <p><strong>Emociones:</strong> {{ cluster.emotions }}</p>
+      <p><strong>Keywords:</strong> {{ cluster.keywords }}</p>
+    </div>
+    <hr>
+  {% endfor %}
+
+   <div class="grafico">
+    <h2>🗺️ Visualización de Clusters</h2>
+    <img src="data:image/png;base64,{{ grafico_base64 }}" alt="Gráfico de clusters" style="width:100%; max-width:900px;">
+  </div>
+</body>
+</html>
