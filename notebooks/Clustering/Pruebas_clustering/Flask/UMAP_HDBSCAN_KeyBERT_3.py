@@ -7,8 +7,9 @@ import hdbscan
 from keybert import KeyBERT
 import base64
 import io
+import time
 
-# 🔧 1. Cargar y preparar datos
+# 1. Cargar y preparar datos
 def cargar_datos(ruta_csv, sample_size_per_emotion=300):
     df = pd.read_csv(ruta_csv, encoding="utf-8")
     df['main_emotion'] = df['sentiment'].astype(str)
@@ -26,7 +27,7 @@ def cargar_datos(ruta_csv, sample_size_per_emotion=300):
 
     return df_sampled, top_emotions
 
-# 🔧 2. Embeddings y clustering
+# 2. Embeddings y clustering
 def generar_clusters(df_sampled):
     model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
     embeddings = model.encode(df_sampled["text"].tolist(), show_progress_bar=True)
@@ -43,7 +44,7 @@ def generar_clusters(df_sampled):
 
     return model, umap_2d, cluster_labels
 
-# 🔧 3. Extraer palabras clave
+# 3. Extraer palabras clave
 def extraer_keywords(df_sampled, cluster_labels, model):
     kw_model = KeyBERT(model=model)
     cluster_keywords = {}
@@ -58,7 +59,7 @@ def extraer_keywords(df_sampled, cluster_labels, model):
 
     return cluster_keywords
 
-# 🔧 4. Preparar resumen por cluster
+# 4. Preparar resumen por cluster
 def preparar_resumen(df_sampled, cluster_labels, cluster_keywords):
     n_clusters = len(set(cluster_labels)) - (1 if -1 in cluster_labels else 0)
     resumen_clusters = []
@@ -76,7 +77,7 @@ def preparar_resumen(df_sampled, cluster_labels, cluster_keywords):
 
     return n_clusters, resumen_clusters
 
-# 🔧 5. Visualización en base64
+#  5. Visualización en base64
 def generar_grafico_clusters(umap_2d, cluster_labels, cluster_keywords):
     n_clusters = len(set(cluster_labels)) - (1 if -1 in cluster_labels else 0)
     plt.figure(figsize=(14, 10))
@@ -115,6 +116,50 @@ def generar_grafico_clusters(umap_2d, cluster_labels, cluster_keywords):
     plt.close()
     return image_base64
 
+# TIEMPO DE EJECUCIÓN DEL PIPELINE DE CLUSTERING 
+
+# ⏱ Tiempo total
+start_total = time.time()
+
+# ⏱ Tiempo de ingesta
+start = time.time()
+df_sampled, top_emotions = cargar_datos("C:\\Users\\Usuario9\\OneDrive\\Documentos\\Master Big Data\\UPC - BIG DATA\\TFM\\TFM-main\\TFM\\TFM\\notebooks\\Clustering\\Pruebas_clustering\\Flask\\datasets\\DailyDialog.csv")
+end = time.time()
+tiempo_ingesta = end - start
+print(f"⏱ Tiempo de ingesta: {tiempo_ingesta:.2f} s")
+
+# ⏱ Tiempo de transformación
+start = time.time()
+model, umap_2d, cluster_labels = generar_clusters(df_sampled)
+end = time.time()
+tiempo_transformacion = end - start
+print(f"⏱ Tiempo de transformación (embeddings + UMAP + clustering): {tiempo_transformacion:.2f} s")
+
+# ⏱ Tiempo de enriquecimiento
+start = time.time()
+cluster_keywords = extraer_keywords(df_sampled, cluster_labels, model)
+end = time.time()
+tiempo_enriquecimiento = end - start
+print(f"⏱ Tiempo de enriquecimiento (keywords): {tiempo_enriquecimiento:.2f} s")
+
+# ⏱ Tiempo de agregación
+start = time.time()
+n_clusters, resumen_clusters = preparar_resumen(df_sampled, cluster_labels, cluster_keywords)
+end = time.time()
+tiempo_agregacion = end - start
+print(f"⏱ Tiempo de agregación/resumen: {tiempo_agregacion:.2f} s")
+
+# ⏱ Tiempo de visualización
+start = time.time()
+imagen_base64 = generar_grafico_clusters(umap_2d, cluster_labels, cluster_keywords)
+end = time.time()
+tiempo_visualizacion = end - start
+print(f"⏱ Tiempo de visualización: {tiempo_visualizacion:.2f} s")
+
+# ⏱ Tiempo total
+end_total = time.time()
+tiempo_total = end_total - start_total
+print(f"⏱⏱ Tiempo total del pipeline: {tiempo_total:.2f} s")
 
 
 '''
