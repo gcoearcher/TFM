@@ -1,5 +1,3 @@
-import pandas as pd
-import numpy as np
 from sentence_transformers import SentenceTransformer
 import umap
 from sklearn.cluster import KMeans
@@ -11,19 +9,30 @@ matplotlib.use('Agg')  # backend sin GUI
 
 
 # 🔧 1. Cargar y preparar datos
-def cargar_datos(ruta_csv, sample_size_per_emotion=200):
+def cargar_datos(ruta_csv, sample_size_per_emotion=200, top_n_emotions=4):
+    import pandas as pd
+
+    # Cargar el CSV
     df = pd.read_csv(ruta_csv, encoding="utf-8")
-    emotion_columns = df.columns[df.columns.get_loc("admiration"):]  # ajusta si cambia el punto de inicio
 
-    def get_main_emotion(row):
-        emotions = row[emotion_columns]
-        labels = emotions[emotions == 1].index.tolist()
-        return labels[0] if labels else "neutral"
+    # Normalizar nombres de columnas
+    columnas = {col.lower(): col for col in df.columns}
+    texto_col = next((columnas[c] for c in ["text", "comment"] if c in columnas), None)
+    emocion_col = next((columnas[c] for c in ["emotion", "sentiment"] if c in columnas), None)
 
-    df["main_emotion"] = df.apply(get_main_emotion, axis=1)
-    top_emotions = df["main_emotion"].value_counts().head(4).index.tolist()
+    # Verificar columnas obligatorias
+    if texto_col is None or emocion_col is None:
+        raise ValueError("El dataset debe contener una columna de texto ('text' o 'comment') y una de emoción ('emotion' o 'sentiment').")
+
+    # Limpiar texto y emoción
+    df[texto_col] = df[texto_col].astype(str).str.strip()
+    df["main_emotion"] = df[emocion_col].astype(str).str.strip()
+
+    # Filtrar emociones más comunes
+    top_emotions = df["main_emotion"].value_counts().head(top_n_emotions).index.tolist()
     df_filtered = df[df["main_emotion"].isin(top_emotions)].copy()
 
+    # Muestreo equilibrado
     df_sampled = pd.DataFrame()
     for emotion in top_emotions:
         emotion_data = df_filtered[df_filtered["main_emotion"] == emotion]
@@ -34,6 +43,7 @@ def cargar_datos(ruta_csv, sample_size_per_emotion=200):
         df_sampled = pd.concat([df_sampled, emotion_sample], ignore_index=True)
 
     return df_sampled, top_emotions
+
 
 # 🔧 2. Embeddings y reducción dimensional
 def generar_embeddings(df_sampled):

@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def resultados():
-    ruta_csv = "C:\\Users\\Usuario9\\OneDrive\\Documentos\\Master Big Data\\UPC - BIG DATA\\TFM\\TFM-main\\TFM\\TFM\\notebooks\\Clustering\\Pruebas_clustering\\Flask\\datasets\\goemotions_1.csv"  # Cambia esto según el dataset
+    ruta_csv = "C:\\Users\\Usuario9\\OneDrive\\Documentos\\Master Big Data\\UPC - BIG DATA\\TFM\\TFM-main\\TFM\\TFM\\notebooks\\Clustering\\Pruebas_clustering\\Flask\\datasets\\DailyDialog.csv"  # Cambia esto según el dataset
     df_sampled, top_emotions = cargar_datos(ruta_csv)
     umap_2d = generar_embeddings(df_sampled)
     df_clustered, centroids = aplicar_kmeans(df_sampled, umap_2d)
@@ -24,5 +24,5 @@ def resultados():
                            grafico_base64=grafico_base64)
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    app.run(debug=True)
 

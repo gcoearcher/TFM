@@ -5,8 +5,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import hdbscan
 from keybert import KeyBERT
-from sklearn.cluster import KMeans
-from collections import Counter
 import base64
 import io
 
