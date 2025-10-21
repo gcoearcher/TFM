@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Clustering de Emociones</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>📁 Análisis guardados</h2>
+        <ul>
+            <li><a href="#">Dataset 1: Twitter</a></li>
+            <li><a href="#">Dataset 2: Reddit</a></li>
+            <li><a href="#">Dataset 3: YouTube</a></li>
+            <!-- Puedes generar estos dinámicamente en el futuro -->
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="container">
+            <h1>Clustering de Emociones</h1>
+            <p>Resultados del análisis emocional sobre el dataset cargado.</p>
+
+            <div class="grafico">
+              <img src="data:image/png;base64,{{ grafico_base64 }}" alt="Gráfico de Clusters">
+            </div>
+
+            {% for cluster in resumen_clusters %}
+            <div class="cluster-box">
+                <h3>Cluster {{ cluster.id }} ({{ cluster.size }} textos)</h3>
+                <ul>
+                    {% for emotion, count in cluster.emotions.items() %}
+                    <li><strong>{{ emotion }}:</strong> {{ count }} textos</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
+
