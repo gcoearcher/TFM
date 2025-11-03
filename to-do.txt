@@ -1,0 +1,5 @@
+conda create -n test python=3.9 -y
+
+conda activate test
+
+pip install -r spark_requirements.txt
